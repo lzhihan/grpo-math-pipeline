@@ -159,8 +159,44 @@ English:
 - `configs/grpo.yaml`：GRPO 超参数、输出路径 | GRPO hyperparameters, output path
 - `configs/eval.yaml`：生成参数、评测输出路径 | generation settings, evaluation output path
 
+## 12) 优化方向 | Optimization Roadmap
 
-## 12) 每个目录做什么
+中文：建议按下面顺序做优化，避免一次改太多变量。
+English: Optimize in this order to avoid changing too many variables at once.
+
+### A. 先稳住资源与吞吐 | Resource/Throughput First
+
+- 减显存峰值：优先调小 `num_generations`（4 -> 2），再调 `max_completion_length`（256 -> 192）。
+- 控制磁盘：保持 `save_total_limit: 2`，必要时增大 `save_steps`（如 200 -> 400）。
+- 提高吞吐：先固定 batch 与长度，只改一项参数做 AB 对比。
+
+### B. 再提准确率 | Accuracy Second
+
+- 保持奖励简单：先用 `correctness + format`，不要一开始引入复杂过程奖励。
+- 课程式数据：先 easy 题稳定训练，再逐步加入稍难题。
+- 做小规模网格：只扫 2~3 组关键参数（例如 `learning_rate`、`num_generations`）。
+
+### C. 最后做稳定性与归因 | Stability and Attribution
+
+- 每次实验只改一个主变量，并写入 `reports/experiment_notes.md`。
+- 固定验证/测试集，不随实验变化。
+- 关注“accuracy 是否和 reward 同步上升”，防止只学格式不学解题。
+
+### D. 推荐迭代顺序 | Suggested Iteration Order
+
+1. 跑通 `Base / SFT-only / SFT+GRPO` 基线。
+2. 先优化资源参数（显存、速度、checkpoint 占用）。
+3. 再优化效果参数（数据难度、学习率、生成数）。
+4. 最后做错误样例分析与失败归因。
+
+### E. 常见优化信号 | Common Optimization Signals
+
+- `boxed_rate` 上升但 `accuracy` 不升：格式奖励偏强或任务太难。
+- 训练 reward 上升、测试 accuracy 不升：可能过拟合或评测集分布不匹配。
+- 输出长度持续膨胀：适当降低 `max_completion_length`，并检查 prompt 约束。
+
+
+## 13) 每个目录做什么
 
 `configs`
 - 放实验配置，避免把超参数写死在脚本里。
@@ -188,3 +224,9 @@ English:
 `reports`
 - 最终对比表、错误案例、实验结论。
 
+## 14) 引用
+
+- [DeepSeekMath](https://arxiv.org/abs/2402.03300)。
+- [DeepSeek-R1 / Nature](https://www.nature.com/articles/s41586-025-09422-z)。
+- [GRPOTrainer](https://huggingface.co/docs/trl/grpo_trainer)
+- [open-r1](https://github.com/huggingface/open-r1)。
