@@ -1,0 +1,14 @@
+seed: 42
+
+test_file: data/processed/test.jsonl
+val_file: data/processed/val.jsonl
+
+generation:
+  max_new_tokens: 128
+  do_sample: false
+  temperature: 1.0
+
+outputs:
+  baseline_predictions: outputs/baseline/qwen2.5-1.5b-test_predictions.jsonl
+  eval_dir: outputs/eval
+  report_csv: reports/metrics_summary.csv

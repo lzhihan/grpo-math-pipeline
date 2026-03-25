@@ -1,0 +1,13 @@
+seed: 42
+
+raw_data_path: data/raw/simple_math_source.jsonl
+processed_dir: data/processed
+sample_debug_path: data/samples/debug_32.jsonl
+
+num_samples: 3000
+debug_samples: 32
+
+splits:
+  train: 0.8
+  val: 0.1
+  test: 0.1

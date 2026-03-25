@@ -1,0 +1,4 @@
+model_tag,num_samples,accuracy,boxed_rate,avg_output_tokens_rough,predictions_path
+base,300,0.7866666666666666,0.8666666666666667,66.09666666666666,/root/transparent-grpo/outputs/baseline/qwen2.5-1.5b-test_predictions.jsonl
+sft,300,0.6833333333333333,1.0,3.066666666666667,/root/transparent-grpo/outputs/eval/sft_test_predictions.jsonl
+grpo,300,0.8,1.0,3.0,/root/transparent-grpo/outputs/eval/grpo_test_predictions.jsonl
